@@ -17,14 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Request {
 
     private final HttpExchange httpExchange;
-    private Headers headers;
+    private final Headers headers;
     private String rawBody;
 
-    private String jsonBody;
+    private final String jsonBody;
 
-    public Request(HttpExchange httpExchange) {
+    public Request(HttpExchange httpExchange, String jsonBody) {
         this.httpExchange = httpExchange;
         this.headers = httpExchange.getRequestHeaders();
+        this.jsonBody = jsonBody;
     }
 
     public String getBody() {
