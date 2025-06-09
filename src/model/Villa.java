@@ -1,10 +1,14 @@
 package model;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Villa {
     private int id;
-    private String name;
-    private String description;
-    private String address;
+    private final String name;
+    private final String description;
+    private final String address;
 
     public Villa(int id, String name, String description, String address) {
         this.id = id;
@@ -35,5 +39,18 @@ public class Villa {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static List<Villa> fromResultSet(ResultSet resultSet) throws Exception {
+        List<Villa> villas = new ArrayList<>();
+        while (resultSet.next()) {
+            villas.add(new Villa(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("description"),
+                    resultSet.getString("address")
+            ));
+        }
+        return villas;
     }
 }
