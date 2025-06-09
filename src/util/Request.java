@@ -62,5 +62,7 @@ public class Request {
         return jsonMap;
     }
 
-
+    public Request(HttpExchange httpExchange) {
+        this(httpExchange, null);
+    }
 }
