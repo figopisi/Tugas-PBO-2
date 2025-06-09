@@ -8,7 +8,9 @@ public class Voucher {
     private String startDate;
     private String endDate;
 
-  public Voucher(int id, String code, String description, double discount, String startDate, String endDate) {
+    public Voucher() {}
+
+    public Voucher(int id, String code, String description, double discount, String startDate, String endDate) {
         this.id = id;
         this.code = code;
         this.description = description;
