@@ -2,7 +2,7 @@ package model;
 
 public class Review {
     private int bookingId;
-    private int star;
+    private int star;       // 1 sampai 5
     private String title;
     private String content;
 
