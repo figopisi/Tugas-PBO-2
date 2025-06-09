@@ -12,16 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
-    private HttpServer server;
 
-    private class RequestHandler implements HttpHandler {
+    private static class RequestHandler implements HttpHandler {
         public void handle(HttpExchange httpExchange) {
             Server.processHttpExchange(httpExchange);
         }
     }
 
     public Server(int port) throws Exception {
-        server = HttpServer.create(new InetSocketAddress(port), 128);
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 128);
         server.createContext("/", new RequestHandler());
         server.start();
     }
@@ -63,4 +62,10 @@ public class Server {
 
         httpExchange.close();
     }
+
+    public static String jsonMap(Map<String, Object> map) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(map);
+    }
+
 }
