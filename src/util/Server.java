@@ -1,3 +1,5 @@
+package util;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -46,7 +48,7 @@ public class Server {
         if (!res.isSent()) {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> resJsonMap = new HashMap<>();
-            resJsonMap.put("message", "Request Success");
+            resJsonMap.put("message", "util.Request Success");
 
             String resJson = "";
             try {
