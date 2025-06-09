@@ -7,9 +7,10 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
+
+import util.exception.exception;
+import service.VillaService.VillaService;
 
 public class Server {
 
@@ -26,41 +27,24 @@ public class Server {
     }
 
     public static void processHttpExchange(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
-        URI uri = httpExchange.getRequestURI();
-        String path = uri.getPath();
-        System.out.printf("path: %s\n", path);
-
-        // Handle request dan autentikasi dalam block try-catch dibawah. Tapi apa semua harus diletakkan disini?
         try {
-            Map<String, Object> reqJsonMap = req.getJSON();
-            System.out.println("first_name => " + reqJsonMap.get("first_name"));
-            System.out.println("email => " + reqJsonMap.get("email"));
-            System.out.println("Done!");
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        // Handle response disini jika tidak ada yg menghandle
-        if (!res.isSent()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> resJsonMap = new HashMap<>();
-            resJsonMap.put("message", "util.Request Success");
-
-            String resJson = "";
+            // Delegasikan penanganan request berdasarkan path
+            route(httpExchange);
+        } catch (Exception e) {
+            e.printStackTrace();
             try {
-                resJson = objectMapper.writeValueAsString(resJsonMap);
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
+                Response res = new Response(httpExchange);
+                res.setBody(jsonMap(Map.of(
+                        "status", 500,
+                        "message", "Internal Server Error"
+                )));
+                res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
+            } catch (Exception innerEx) {
+                innerEx.printStackTrace();
             }
-            res.setBody(resJson);
-            res.send(HttpURLConnection.HTTP_OK);
-            return;
+        } finally {
+            httpExchange.close();
         }
-
-        httpExchange.close();
     }
 
     public static String jsonMap(Map<String, Object> map) throws Exception {
@@ -68,4 +52,56 @@ public class Server {
         return objectMapper.writeValueAsString(map);
     }
 
+    public static void route(HttpExchange httpExchange) throws Exception {
+        String path = httpExchange.getRequestURI().getPath();
+
+        if (path.startsWith("/villas")) {
+            handleVillaRequest(httpExchange);
+        } else if (path.startsWith("/customers")) {
+            handleCustomerRequest(httpExchange);
+        } else {
+            // FIXED: Jangan panggil processHttpExchange lagi!
+            Response res = new Response(httpExchange);
+            res.setBody(jsonMap(Map.of(
+                    "status", 404,
+                    "message", "Endpoint not found"
+            )));
+            res.send(HttpURLConnection.HTTP_NOT_FOUND);
+        }
+    }
+
+    private static void handleVillaRequest(HttpExchange httpExchange) throws Exception {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
+
+        String method = req.getRequestMethod();
+        String path = httpExchange.getRequestURI().getPath();
+
+        System.out.printf("Received %s request to path: %s\n", method, path);
+
+        try {
+            if (method.equals("GET") && path.equals("/villas")) {
+                VillaService.index(res);
+            } else if (method.equals("POST") && path.equals("/villas")) {
+                VillaService.create(req, res);
+            } else if (method.equals("GET") && path.matches("/villas/\\d+")) {
+                int id = Integer.parseInt(path.split("/")[2]);
+                VillaService.show(id, res);
+            } else {
+                res.setBody(jsonMap(Map.of("status", 405, "message", "Method Not Allowed")));
+                res.send(HttpURLConnection.HTTP_BAD_METHOD);
+            }
+        } catch (exception e) {
+            res.setBody(Server.jsonMap(Map.of("status", e.getStatus(), "message", e.getMessage())));
+            res.send(e.getStatus());
+        } catch (Exception e) {
+            res.setBody(Server.jsonMap(Map.of("status", 500, "message", "Internal Server Error")));
+            res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
+    private static void handleCustomerRequest(HttpExchange httpExchange) {
+        // Future expansion for customers
+        System.out.println("Customer route not yet implemented.");
+    }
 }
