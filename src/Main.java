@@ -1,3 +1,5 @@
+import util.Server;
+
 public class Main {
     public static final String API_KEY = "S3CR3T_API_KEY_123";  // hardcoded API key
     public static void main(String[] args) throws Exception {
