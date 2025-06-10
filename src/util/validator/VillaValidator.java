@@ -6,24 +6,29 @@ import java.util.Map;
 
 public class VillaValidator {
     public static void validateInput(Map<String, Object> body) throws exception.BadRequestException {
-        if (body == null) {
+        if (body == null || body.isEmpty()) {
             throw new exception.BadRequestException("Data villa tidak boleh kosong");
         }
 
-        Object name = body.get("name");
-        Object description = body.get("description");
-        Object address = body.get("address");
+        try {
+            String name = (String) body.get("name");
+            String description = (String) body.get("description");
+            String address = (String) body.get("address");
 
-        if (!(name instanceof String) || ((String) name).trim().isEmpty()) {
-            throw new exception.BadRequestException("Nama villa wajib diisi");
-        }
+            if (name == null || name.trim().isEmpty()) {
+                throw new exception.BadRequestException("Nama villa wajib diisi");
+            }
 
-        if (!(description instanceof String) || ((String) description).trim().isEmpty()) {
-            throw new exception.BadRequestException("Deskripsi villa wajib diisi");
-        }
+            if (description == null || description.trim().isEmpty()) {
+                throw new exception.BadRequestException("Deskripsi villa wajib diisi");
+            }
 
-        if (!(address instanceof String) || ((String) address).trim().isEmpty()) {
-            throw new exception.BadRequestException("Alamat villa wajib diisi");
+            if (address == null || address.trim().isEmpty()) {
+                throw new exception.BadRequestException("Alamat villa wajib diisi");
+            }
+
+        } catch (ClassCastException e) {
+            throw new exception.BadRequestException("Format input tidak valid. Pastikan semua field berupa string.");
         }
     }
 }
