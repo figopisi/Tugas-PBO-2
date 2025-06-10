@@ -60,7 +60,6 @@ public class Server {
         } else if (path.startsWith("/customers")) {
             handleCustomerRequest(httpExchange);
         } else {
-            // FIXED: Jangan panggil processHttpExchange lagi!
             Response res = new Response(httpExchange);
             res.setBody(jsonMap(Map.of(
                     "status", 404,
@@ -91,17 +90,21 @@ public class Server {
                 res.setBody(jsonMap(Map.of("status", 405, "message", "Method Not Allowed")));
                 res.send(HttpURLConnection.HTTP_BAD_METHOD);
             }
-        } catch (exception e) {
+
+
+        } catch (exception.BadRequestException | exception.NotFoundException e) {
             res.setBody(Server.jsonMap(Map.of("status", e.getStatus(), "message", e.getMessage())));
             res.send(e.getStatus());
+
+
         } catch (Exception e) {
+            e.printStackTrace(); // Logging
             res.setBody(Server.jsonMap(Map.of("status", 500, "message", "Internal Server Error")));
             res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 
     private static void handleCustomerRequest(HttpExchange httpExchange) {
-        // Future expansion for customers
         System.out.println("Customer route not yet implemented.");
     }
 }
