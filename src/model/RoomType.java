@@ -1,5 +1,10 @@
 package model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class RoomType {
     private int id;
     private int villaId;
@@ -13,8 +18,10 @@ public class RoomType {
     private boolean hasWiFi;
     private boolean hasBathtub;
 
+    // Constructor kosong
     public RoomType() {}
 
+    // Constructor lengkap (dengan ID)
     public RoomType(int id, int villaId, String name, int quantity, int capacity, double price,
                     String bedSize, boolean hasDesk, boolean hasAC, boolean hasWiFi, boolean hasBathtub) {
         this.id = id;
@@ -30,12 +37,35 @@ public class RoomType {
         this.hasBathtub = hasBathtub;
     }
 
+    // Constructor tanpa ID
     public RoomType(int villaId, String name, int quantity, int capacity, double price,
                     String bedSize, boolean hasDesk, boolean hasAC, boolean hasWiFi, boolean hasBathtub) {
         this(0, villaId, name, quantity, capacity, price, bedSize, hasDesk, hasAC, hasWiFi, hasBathtub);
     }
 
+    // Static method untuk parsing dari ResultSet
+    public static List<RoomType> fromResultSet(ResultSet rs) throws SQLException {
+        List<RoomType> rooms = new ArrayList<>();
+        while (rs.next()) {
+            RoomType room = new RoomType(
+                    rs.getInt("id"),
+                    rs.getInt("villa_id"),
+                    rs.getString("name"),
+                    rs.getInt("quantity"),
+                    rs.getInt("capacity"),
+                    rs.getDouble("price"),
+                    rs.getString("bed_size"),
+                    rs.getBoolean("has_desk"),
+                    rs.getBoolean("has_ac"),
+                    rs.getBoolean("has_wifi"),
+                    rs.getBoolean("has_bathtub")
+            );
+            rooms.add(room);
+        }
+        return rooms;
+    }
 
+    // Getter & Setter
     public int getId() {
         return id;
     }
