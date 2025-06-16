@@ -17,17 +17,17 @@ public class VillaRoomHandler {
         Response res = new Response(exchange);
 
         try {
-            if (method.equals("GET") && path.equals("/room_types")) {
+            if (method.equals("GET") && path.equals("/rooms")) {
                 VillaRoomService.index(res);
-            } else if (method.equals("GET") && path.matches("/room_types/\\d+")) {
+            } else if (method.equals("GET") && path.matches("/rooms/\\d+")) {
                 int id = Integer.parseInt(path.split("/")[2]);
                 VillaRoomService.show(id, res);
-            } else if (method.equals("POST") && path.equals("/room_types")) {
+            } else if (method.equals("POST") && path.equals("/rooms")) {
                 VillaRoomService.create(req, res);
-            } else if (method.equals("PUT") && path.matches("/room_types/\\d+")) {
+            } else if (method.equals("PUT") && path.matches("/rooms/\\d+")) {
                 int id = Integer.parseInt(path.split("/")[2]);
                 VillaRoomService.update(id, req, res);
-            } else if (method.equals("DELETE") && path.matches("/room_types/\\d+")) {
+            } else if (method.equals("DELETE") && path.matches("/rooms/\\d+")) {
                 int id = Integer.parseInt(path.split("/")[2]);
                 VillaRoomService.destroy(id, res);
             } else {
