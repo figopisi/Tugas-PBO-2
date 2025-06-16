@@ -1,13 +1,13 @@
 package util.validator;
 
-import util.exception.exception;
+import util.Exception.ValidationException;
 
 import java.util.Map;
 
 public class VillaValidator {
-    public static void validateInput(Map<String, Object> body) throws exception.BadRequestException {
+    public static void validateInput(Map<String, Object> body) throws ValidationException {
         if (body == null || body.isEmpty()) {
-            throw new exception.BadRequestException("Data villa tidak boleh kosong");
+            throw new ValidationException("Data villa tidak boleh kosong");
         }
 
         try {
@@ -16,19 +16,19 @@ public class VillaValidator {
             String address = (String) body.get("address");
 
             if (name == null || name.trim().isEmpty()) {
-                throw new exception.BadRequestException("Nama villa wajib diisi");
+                throw new ValidationException("Nama villa wajib diisi");
             }
 
             if (description == null || description.trim().isEmpty()) {
-                throw new exception.BadRequestException("Deskripsi villa wajib diisi");
+                throw new ValidationException("Deskripsi villa wajib diisi");
             }
 
             if (address == null || address.trim().isEmpty()) {
-                throw new exception.BadRequestException("Alamat villa wajib diisi");
+                throw new ValidationException("Alamat villa wajib diisi");
             }
 
         } catch (ClassCastException e) {
-            throw new exception.BadRequestException("Format input tidak valid. Pastikan semua field berupa string.");
+            throw new ValidationException("Format input tidak valid. Pastikan semua field berupa string.");
         }
     }
 }
