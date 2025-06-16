@@ -2,6 +2,9 @@ package web;
 
 import com.sun.net.httpserver.HttpExchange;
 import Controller.VillaController.VillaHandler;
+import Controller.VillaController.VillaRoomHandler;
+import Controller.VillaController.VillaBookingHandler;
+import Controller.VillaController.VillaReviewHandler;
 
 public class Route {
 
@@ -9,7 +12,13 @@ public class Route {
         String path = exchange.getRequestURI().getPath();
         String method = exchange.getRequestMethod();
 
-        if (path.startsWith("/villas")) {
+        if (path.startsWith("/villas") && path.contains("/bookings")) {
+            VillaBookingHandler.handle(exchange, method, path);
+        } else if (path.startsWith("/villas") && path.contains("/reviews")) {
+            VillaReviewHandler.handle(exchange, method, path);
+        } else if (path.startsWith("/rooms")) {
+            VillaRoomHandler.handle(exchange, method, path);
+        } else if (path.startsWith("/villas")) {
             VillaHandler.handle(exchange, method, path);
         } else {
             throw new Exception("Route not found");
