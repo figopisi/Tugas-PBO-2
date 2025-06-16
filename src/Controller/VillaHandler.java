@@ -5,7 +5,7 @@ import util.Request;
 import util.Response;
 import web.Server;
 import service.VillaService.VillaService;
-import util.ApiException.ApiException;
+import util.Exception.ApiException;
 
 import java.net.HttpURLConnection;
 import java.util.Map;

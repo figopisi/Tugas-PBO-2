@@ -3,10 +3,10 @@ package service.VillaService;
 import config.Database;
 import model.Villa;
 import util.Request;
-import util.exception.exception;
+import util.Exception.ApiException;
 import util.validator.VillaValidator;
 import util.Response;
-import util.Server;
+import web.Server;
 
 import java.net.HttpURLConnection;
 import java.sql.*;
@@ -35,7 +35,7 @@ public class VillaService {
 
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
-                throw new exception.NotFoundException("Villa dengan id " + id + " tidak ditemukan");
+                throw new ApiException.NotFoundApiException("Villa dengan id " + id + " tidak ditemukan");
             }
 
             Villa villa = new Villa(
@@ -85,7 +85,7 @@ public class VillaService {
             ResultSet rs = checkStatement.executeQuery();
 
             if (!rs.next()) {
-                throw new exception.NotFoundException("Villa dengan id " + id + " tidak ditemukan");
+                throw new ApiException.NotFoundApiException("Villa dengan id " + id + " tidak ditemukan");
             }
 
             String updateQuery = "UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?";
@@ -109,7 +109,7 @@ public class VillaService {
             ResultSet rs = checkStatement.executeQuery();
 
             if (!rs.next()) {
-                throw new exception.NotFoundException("Villa dengan id " + id + " tidak ditemukan");
+                throw new ApiException.NotFoundApiException("Villa dengan id " + id + " tidak ditemukan");
             }
 
             String deleteQuery = "DELETE FROM villas WHERE id = ?";
