@@ -1,6 +1,6 @@
 package util.validator;
 
-import util.Exception.ValidationException;
+import util.exception.ValidationException;
 
 import java.util.Map;
 
