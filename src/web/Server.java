@@ -1,4 +1,4 @@
-package util;
+package web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
@@ -9,7 +9,9 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import util.exception.exception;
+import util.Request;
+import util.Response;
+import util.exception.ApiException;
 import service.VillaService.VillaService;
 
 public class Server {
@@ -92,7 +94,7 @@ public class Server {
             }
 
 
-        } catch (exception.BadRequestException | exception.NotFoundException e) {
+        } catch (ApiException.BadRequestApiException | ApiException.NotFoundApiException e) {
             res.setBody(Server.jsonMap(Map.of("status", e.getStatus(), "message", e.getMessage())));
             res.send(e.getStatus());
 
