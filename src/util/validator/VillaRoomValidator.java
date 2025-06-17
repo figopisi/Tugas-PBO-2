@@ -11,16 +11,11 @@ public class VillaRoomValidator {
         }
 
         try {
-            String roomType = (String) body.get("room_type");
-            String facilities = (String) body.get("facilities");
+            String name = (String) body.get("name");
             Object priceObj = body.get("price");
 
-            if (roomType == null || roomType.trim().isEmpty()) {
+            if (name == null || name.trim().isEmpty()) {
                 throw new ValidationException("Tipe kamar wajib diisi");
-            }
-
-            if (facilities == null || facilities.trim().isEmpty()) {
-                throw new ValidationException("Fasilitas wajib diisi");
             }
 
             if (priceObj == null) {
@@ -30,6 +25,8 @@ public class VillaRoomValidator {
             if (!(priceObj instanceof Number)) {
                 throw new ValidationException("Harga harus berupa angka");
             }
+
+            // Tambahkan validasi lain jika perlu, seperti quantity, capacity, bed_size, dll
 
         } catch (ClassCastException e) {
             throw new ValidationException("Format input tidak valid. Pastikan semua field memiliki format yang benar.");
