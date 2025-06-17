@@ -1,4 +1,4 @@
-package util.exception;
+package util.Exception;
 
 public class exception extends Exception {
     private final int status;
