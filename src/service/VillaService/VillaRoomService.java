@@ -61,7 +61,7 @@ public class VillaRoomService {
             stmt.setString(2, (String) body.get("name"));
             stmt.setInt(3, (int) body.get("quantity"));
             stmt.setInt(4, (int) body.get("capacity"));
-            stmt.setDouble(5, (double) body.get("price"));
+            stmt.setDouble(5, ((Number) body.get("price")).doubleValue());
             stmt.setString(6, (String) body.get("bed_size"));
             stmt.setBoolean(7, (boolean) body.get("has_desk"));
             stmt.setBoolean(8, (boolean) body.get("has_ac"));
@@ -102,7 +102,7 @@ public class VillaRoomService {
             stmt.setString(2, (String) body.get("name"));
             stmt.setInt(3, (int) body.get("quantity"));
             stmt.setInt(4, (int) body.get("capacity"));
-            stmt.setDouble(5, (double) body.get("price"));
+            stmt.setDouble(5, ((Number) body.get("price")).doubleValue());
             stmt.setString(6, (String) body.get("bed_size"));
             stmt.setBoolean(7, (boolean) body.get("has_desk"));
             stmt.setBoolean(8, (boolean) body.get("has_ac"));
