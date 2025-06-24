@@ -20,16 +20,12 @@ public class AvailableHandler {
             String ciDate = queryParams.get("ci_date");
             String coDate = queryParams.get("co_date");
 
-            // Validasi
             VillaAvailableValidator.validate(ciDate, coDate);
 
-            // Ambil data dari service
             List<RoomType> rooms = VillaAvailableService.getAvailableRooms(villaId, ciDate, coDate);
 
-            // Convert data ke JSON string
             String jsonResponse = objectMapper.writeValueAsString(rooms);
 
-            // Set body dan kirim response
             res.setBody(jsonResponse);
             res.send(200);
         } catch (ApiException e) {
