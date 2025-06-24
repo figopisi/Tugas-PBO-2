@@ -13,6 +13,7 @@ import java.util.Map;
 public class VillaRoomHandler {
 
     public static void handle(HttpExchange exchange, String method, String path) throws Exception {
+        path = path.replaceAll("/$", "");
         Request req = new Request(exchange);
         Response res = new Response(exchange);
 
