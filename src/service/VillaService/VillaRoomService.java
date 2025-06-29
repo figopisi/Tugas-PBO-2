@@ -53,11 +53,11 @@ public class VillaRoomService {
 
         try (Connection connection = Database.getConnection()) {
             String query = "INSERT INTO room_types " +
-                    "(villa_id, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_wifi, has_bathtub) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "(villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv, has_wifi, has_shower, has_hotwater, has_fridge) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, (int) body.get("villa_id"));
+            stmt.setInt(1, (int) body.get("villa"));
             stmt.setString(2, (String) body.get("name"));
             stmt.setInt(3, (int) body.get("quantity"));
             stmt.setInt(4, (int) body.get("capacity"));
@@ -65,8 +65,11 @@ public class VillaRoomService {
             stmt.setString(6, (String) body.get("bed_size"));
             stmt.setBoolean(7, (boolean) body.get("has_desk"));
             stmt.setBoolean(8, (boolean) body.get("has_ac"));
-            stmt.setBoolean(9, (boolean) body.get("has_wifi"));
-            stmt.setBoolean(10, (boolean) body.get("has_bathtub"));
+            stmt.setBoolean(9, (boolean) body.get("has_tv"));
+            stmt.setBoolean(10, (boolean) body.get("has_wifi"));
+            stmt.setBoolean(11, (boolean) body.get("has_shower"));
+            stmt.setBoolean(12, (boolean) body.get("has_hotwater"));
+            stmt.setBoolean(13, (boolean) body.get("has_fridge"));
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -94,11 +97,11 @@ public class VillaRoomService {
                 throw new ApiException.NotFoundApiException("Room type dengan id " + id + " tidak ditemukan");
             }
 
-            String updateQuery = "UPDATE room_types SET villa_id = ?, name = ?, quantity = ?, capacity = ?, " +
-                    "price = ?, bed_size = ?, has_desk = ?, has_ac = ?, has_wifi = ?, has_bathtub = ? WHERE id = ?";
+            String updateQuery = "UPDATE room_types SET villa = ?, name = ?, quantity = ?, capacity = ?, " +
+                    "price = ?, bed_size = ?, has_desk = ?, has_ac = ?, has_tv = ?, has_wifi = ?, has_shower = ?, has_hotwater = ?, has_fridge = ? WHERE id = ?";
 
             PreparedStatement stmt = connection.prepareStatement(updateQuery);
-            stmt.setInt(1, (int) body.get("villa_id"));
+            stmt.setInt(1, (int) body.get("villa"));
             stmt.setString(2, (String) body.get("name"));
             stmt.setInt(3, (int) body.get("quantity"));
             stmt.setInt(4, (int) body.get("capacity"));
@@ -106,9 +109,12 @@ public class VillaRoomService {
             stmt.setString(6, (String) body.get("bed_size"));
             stmt.setBoolean(7, (boolean) body.get("has_desk"));
             stmt.setBoolean(8, (boolean) body.get("has_ac"));
-            stmt.setBoolean(9, (boolean) body.get("has_wifi"));
-            stmt.setBoolean(10, (boolean) body.get("has_bathtub"));
-            stmt.setInt(11, id);
+            stmt.setBoolean(9, (boolean) body.get("has_tv"));
+            stmt.setBoolean(10, (boolean) body.get("has_wifi"));
+            stmt.setBoolean(11, (boolean) body.get("has_shower"));
+            stmt.setBoolean(12, (boolean) body.get("has_hotwater"));
+            stmt.setBoolean(13, (boolean) body.get("has_fridge"));
+            stmt.setInt(14, id);
             stmt.executeUpdate();
 
             res.setBody(Server.jsonMap(Map.of("status", 200, "message", "Room type berhasil diubah")));
@@ -140,7 +146,7 @@ public class VillaRoomService {
     private static RoomType fromResultSet(ResultSet rs) throws SQLException {
         return new RoomType(
                 rs.getInt("id"),
-                rs.getInt("villa_id"),
+                rs.getInt("villa"),
                 rs.getString("name"),
                 rs.getInt("quantity"),
                 rs.getInt("capacity"),
@@ -148,8 +154,11 @@ public class VillaRoomService {
                 rs.getString("bed_size"),
                 rs.getBoolean("has_desk"),
                 rs.getBoolean("has_ac"),
+                rs.getBoolean("has_tv"),
                 rs.getBoolean("has_wifi"),
-                rs.getBoolean("has_bathtub")
+                rs.getBoolean("has_shower"),
+                rs.getBoolean("has_hotwater"),
+                rs.getBoolean("has_fridge")
         );
     }
 }

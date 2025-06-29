@@ -16,8 +16,8 @@ public class VillaAvailableService {
         validateDateParams(ciDate, coDate);
 
         List<RoomType> availableRooms = new ArrayList<>();
-        String sql = "SELECT * FROM room_type rt " +
-                "WHERE rt.villa_id = ? AND rt.id NOT IN (" +
+        String sql = "SELECT * FROM room_types rt " +
+                "WHERE rt.villa = ? AND rt.id NOT IN (" +
                 "    SELECT room_type_id FROM bookings " +
                 "    WHERE (? < co_date AND ? > ci_date)" +
                 ")";
@@ -33,7 +33,7 @@ public class VillaAvailableService {
             while (rs.next()) {
                 RoomType room = new RoomType(
                         rs.getInt("id"),
-                        rs.getInt("villa_id"),
+                        rs.getInt("villa"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getInt("capacity"),
@@ -41,8 +41,11 @@ public class VillaAvailableService {
                         rs.getString("bed_size"),
                         rs.getBoolean("has_desk"),
                         rs.getBoolean("has_ac"),
+                        rs.getBoolean("has_tv"),
                         rs.getBoolean("has_wifi"),
-                        rs.getBoolean("has_bathtub")
+                        rs.getBoolean("has_shower"),
+                        rs.getBoolean("has_hotwater"),
+                        rs.getBoolean("has_fridge")
                 );
                 availableRooms.add(room);
             }

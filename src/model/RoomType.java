@@ -7,40 +7,49 @@ import java.util.List;
 
 public class RoomType {
     private int id;
-    private int villaId;
+    private int villa; // disamakan dengan nama kolom "villa"
     private String name;
     private int quantity;
     private int capacity;
     private double price;
     private String bedSize;
     private boolean hasDesk;
-    private boolean hasAC;
-    private boolean hasWiFi;
-    private boolean hasBathtub;
+    private boolean hasAc;
+    private boolean hasTv;
+    private boolean hasWifi;
+    private boolean hasShower;
+    private boolean hasHotwater;
+    private boolean hasFridge;
 
     // Constructor kosong
     public RoomType() {}
 
     // Constructor lengkap (dengan ID)
-    public RoomType(int id, int villaId, String name, int quantity, int capacity, double price,
-                    String bedSize, boolean hasDesk, boolean hasAC, boolean hasWiFi, boolean hasBathtub) {
+    public RoomType(int id, int villa, String name, int quantity, int capacity, double price,
+                    String bedSize, boolean hasDesk, boolean hasAc, boolean hasTv, boolean hasWifi,
+                    boolean hasShower, boolean hasHotwater, boolean hasFridge) {
         this.id = id;
-        this.villaId = villaId;
+        this.villa = villa;
         this.name = name;
         this.quantity = quantity;
         this.capacity = capacity;
         this.price = price;
         this.bedSize = bedSize;
         this.hasDesk = hasDesk;
-        this.hasAC = hasAC;
-        this.hasWiFi = hasWiFi;
-        this.hasBathtub = hasBathtub;
+        this.hasAc = hasAc;
+        this.hasTv = hasTv;
+        this.hasWifi = hasWifi;
+        this.hasShower = hasShower;
+        this.hasHotwater = hasHotwater;
+        this.hasFridge = hasFridge;
     }
 
     // Constructor tanpa ID
-    public RoomType(int villaId, String name, int quantity, int capacity, double price,
-                    String bedSize, boolean hasDesk, boolean hasAC, boolean hasWiFi, boolean hasBathtub) {
-        this(0, villaId, name, quantity, capacity, price, bedSize, hasDesk, hasAC, hasWiFi, hasBathtub);
+    public RoomType(int villa, String name, int quantity, int capacity, double price,
+                    String bedSize, boolean hasDesk, boolean hasAc, boolean hasTv, boolean hasWifi,
+                    boolean hasShower, boolean hasHotwater, boolean hasFridge) {
+        this(0, villa, name, quantity, capacity, price, bedSize,
+                hasDesk, hasAc, hasTv, hasWifi, hasShower, hasHotwater, hasFridge);
     }
 
     // Static method untuk parsing dari ResultSet
@@ -49,7 +58,7 @@ public class RoomType {
         while (rs.next()) {
             RoomType room = new RoomType(
                     rs.getInt("id"),
-                    rs.getInt("villa_id"),
+                    rs.getInt("villa"),
                     rs.getString("name"),
                     rs.getInt("quantity"),
                     rs.getInt("capacity"),
@@ -57,8 +66,11 @@ public class RoomType {
                     rs.getString("bed_size"),
                     rs.getBoolean("has_desk"),
                     rs.getBoolean("has_ac"),
+                    rs.getBoolean("has_tv"),
                     rs.getBoolean("has_wifi"),
-                    rs.getBoolean("has_bathtub")
+                    rs.getBoolean("has_shower"),
+                    rs.getBoolean("has_hotwater"),
+                    rs.getBoolean("has_fridge")
             );
             rooms.add(room);
         }
@@ -74,12 +86,12 @@ public class RoomType {
         this.id = id;
     }
 
-    public int getVillaId() {
-        return villaId;
+    public int getVilla() {
+        return villa;
     }
 
-    public void setVillaId(int villaId) {
-        this.villaId = villaId;
+    public void setVilla(int villa) {
+        this.villa = villa;
     }
 
     public String getName() {
@@ -130,27 +142,51 @@ public class RoomType {
         this.hasDesk = hasDesk;
     }
 
-    public boolean isHasAC() {
-        return hasAC;
+    public boolean isHasAc() {
+        return hasAc;
     }
 
-    public void setHasAC(boolean hasAC) {
-        this.hasAC = hasAC;
+    public void setHasAc(boolean hasAc) {
+        this.hasAc = hasAc;
     }
 
-    public boolean isHasWiFi() {
-        return hasWiFi;
+    public boolean isHasTv() {
+        return hasTv;
     }
 
-    public void setHasWiFi(boolean hasWiFi) {
-        this.hasWiFi = hasWiFi;
+    public void setHasTv(boolean hasTv) {
+        this.hasTv = hasTv;
     }
 
-    public boolean isHasBathtub() {
-        return hasBathtub;
+    public boolean isHasWifi() {
+        return hasWifi;
     }
 
-    public void setHasBathtub(boolean hasBathtub) {
-        this.hasBathtub = hasBathtub;
+    public void setHasWifi(boolean hasWifi) {
+        this.hasWifi = hasWifi;
+    }
+
+    public boolean isHasShower() {
+        return hasShower;
+    }
+
+    public void setHasShower(boolean hasShower) {
+        this.hasShower = hasShower;
+    }
+
+    public boolean isHasHotwater() {
+        return hasHotwater;
+    }
+
+    public void setHasHotwater(boolean hasHotwater) {
+        this.hasHotwater = hasHotwater;
+    }
+
+    public boolean isHasFridge() {
+        return hasFridge;
+    }
+
+    public void setHasFridge(boolean hasFridge) {
+        this.hasFridge = hasFridge;
     }
 }
