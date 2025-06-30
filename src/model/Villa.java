@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Villa {
     private int id;
-    private final String name;
-    private final String description;
-    private final String address;
+    private String name;
+    private String description;
+    private String address;
 
     public Villa(int id, String name, String description, String address) {
         this.id = id;
@@ -40,6 +40,13 @@ public class Villa {
     public void setId(int id) {
         this.id = id;
     }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setAddress(String address) { this.address = address; }
+
 
     public static List<Villa> fromResultSet(ResultSet resultSet) throws Exception {
         List<Villa> villas = new ArrayList<>();
