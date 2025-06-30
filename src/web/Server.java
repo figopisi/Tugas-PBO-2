@@ -3,8 +3,7 @@ package web;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import util.Response;
-import web.Server;
+import util.Response.ResponseHelper;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class Server {
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    Response res = new Response(exchange);
+                    ResponseHelper res = new ResponseHelper(exchange);
                     res.setBody(jsonMap(Map.of(
                             "status", 500,
                             "message", "Internal Server Error"

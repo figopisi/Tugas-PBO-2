@@ -3,7 +3,7 @@ package Controller.VillaController;
 import service.VillaService.VillaAvailableService;
 import util.validator.VillaAvailableValidator;
 import util.Exception.ApiException;
-import util.Response;
+import util.Response.ResponseHelper;
 import model.RoomType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ public class AvailableHandler {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static void getAvailableRooms(Map<String, String> queryParams, int villaId, Response res) {
+    public static void getAvailableRooms(Map<String, String> queryParams, int villaId, ResponseHelper res) {
         try {
             String ciDate = queryParams.get("ci_date");
             String coDate = queryParams.get("co_date");
@@ -35,7 +35,7 @@ public class AvailableHandler {
         }
     }
 
-    private static void sendError(Response res, int status, String message) {
+    private static void sendError(ResponseHelper res, int status, String message) {
         try {
             String jsonError = objectMapper.writeValueAsString(Map.of("error", message));
             res.setBody(jsonError);

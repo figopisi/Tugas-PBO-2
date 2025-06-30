@@ -3,7 +3,7 @@ package service.CustomerService;
 import config.Database;
 import model.Customer;
 import util.Request;
-import util.Response;
+import util.Response.ResponseHelper;
 import util.Exception.ApiException;
 import util.validator.CustomerValidator;
 import web.Server;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class CustomerService {
 
-    public static void index(Response res) throws Exception {
+    public static void index(ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String query = "SELECT * FROM customers";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -37,7 +37,7 @@ public class CustomerService {
         }
     }
 
-    public static void show(int id, Response res) throws Exception {
+    public static void show(int id, ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String query = "SELECT * FROM customers WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -60,7 +60,7 @@ public class CustomerService {
         }
     }
 
-    public static void create(Request req, Response res) throws Exception {
+    public static void create(Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         CustomerValidator.validateInput(body);
 
@@ -84,7 +84,7 @@ public class CustomerService {
         }
     }
 
-    public static void update(int id, Request req, Response res) throws Exception {
+    public static void update(int id, Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         CustomerValidator.validateInput(body);
 

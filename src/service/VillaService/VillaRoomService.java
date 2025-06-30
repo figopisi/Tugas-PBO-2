@@ -3,7 +3,7 @@ package service.VillaService;
 import config.Database;
 import model.RoomType;
 import util.Request;
-import util.Response;
+import util.Response.ResponseHelper;
 import util.Exception.ApiException;
 import util.validator.VillaRoomValidator;
 import web.Server;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class VillaRoomService {
 
-    public static void index(Response res) throws Exception {
+    public static void index(ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String query = "SELECT * FROM room_types";
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -30,7 +30,7 @@ public class VillaRoomService {
         }
     }
 
-    public static void show(int id, Response res) throws Exception {
+    public static void show(int id, ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String query = "SELECT * FROM room_types WHERE id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -47,7 +47,7 @@ public class VillaRoomService {
         }
     }
 
-    public static void create(Request req, Response res) throws Exception {
+    public static void create(Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         VillaRoomValidator.validateInput(body);
 
@@ -84,7 +84,7 @@ public class VillaRoomService {
         }
     }
 
-    public static void update(int id, Request req, Response res) throws Exception {
+    public static void update(int id, Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         VillaRoomValidator.validateInput(body);
 
@@ -122,7 +122,7 @@ public class VillaRoomService {
         }
     }
 
-    public static void destroy(int id, Response res) throws Exception {
+    public static void destroy(int id, ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String checkQuery = "SELECT id FROM room_types WHERE id = ?";
             PreparedStatement checkStmt = connection.prepareStatement(checkQuery);

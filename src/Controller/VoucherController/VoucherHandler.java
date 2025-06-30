@@ -2,7 +2,7 @@ package Controller.VoucherController;
 
 import com.sun.net.httpserver.HttpExchange;
 import util.Request;
-import util.Response;
+import util.Response.ResponseHelper;
 import web.Server;
 import service.VoucherService.VoucherService;
 import util.Exception.ApiException;
@@ -15,7 +15,7 @@ public class VoucherHandler {
     public static void handle(HttpExchange exchange, String method, String path) throws Exception {
         path = path.replaceAll("/$", "");
         Request req = new Request(exchange);
-        Response res = new Response(exchange);
+        ResponseHelper res = new ResponseHelper(exchange);
 
         try {
             if (method.equals("GET") && path.equals("/vouchers")) {

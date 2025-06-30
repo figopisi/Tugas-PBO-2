@@ -2,7 +2,7 @@ package service.VillaService;
 
 import config.Database;
 import model.Review;
-import util.Response;
+import util.Response.ResponseHelper;
 import util.Exception.ApiException;
 import web.Server;
 
@@ -12,7 +12,7 @@ import java.util.*;
 
 public class VillaReviewService {
 
-    public static void indexByVilla(int villaId, Response res) throws Exception {
+    public static void indexByVilla(int villaId, ResponseHelper res) throws Exception {
         try (Connection conn = Database.getConnection()) {
             String checkVilla = "SELECT id FROM villas WHERE id = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkVilla);

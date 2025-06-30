@@ -1,7 +1,7 @@
 package Controller.VillaController;
 
 import com.sun.net.httpserver.HttpExchange;
-import util.Response;
+import util.Response.ResponseHelper;
 import service.VillaService.VillaReviewService;
 import util.Exception.ApiException;
 import web.Server;
@@ -13,7 +13,7 @@ public class VillaReviewHandler {
 
     public static void handle(HttpExchange exchange, String method, String path) throws Exception {
         path = path.replaceAll("/$", "");
-        Response res = new Response(exchange);
+        ResponseHelper res = new ResponseHelper(exchange);
 
         try {
             if (method.equals("GET") && path.matches("/villas/\\d+/reviews")) {

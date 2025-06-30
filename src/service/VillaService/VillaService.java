@@ -5,7 +5,7 @@ import model.Villa;
 import util.Request;
 import util.Exception.ApiException;
 import util.validator.VillaValidator;
-import util.Response;
+import util.Response.ResponseHelper;
 import web.Server;
 
 import java.net.HttpURLConnection;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class VillaService {
 
-    public static void index(Response res) throws Exception {
+    public static void index(ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String query = "SELECT * FROM villas";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -27,7 +27,7 @@ public class VillaService {
         }
     }
 
-    public static void show(int id, Response res) throws Exception {
+    public static void show(int id, ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String query = "SELECT * FROM villas WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -50,7 +50,7 @@ public class VillaService {
         }
     }
 
-    public static void create(Request req, Response res) throws Exception {
+    public static void create(Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         VillaValidator.validateInput(body);
 
@@ -74,7 +74,7 @@ public class VillaService {
         }
     }
 
-    public static void update(int id, Request req, Response res) throws Exception {
+    public static void update(int id, Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         VillaValidator.validateInput(body);
 
@@ -101,7 +101,7 @@ public class VillaService {
         }
     }
 
-    public static void destroy(int id, Response res) throws Exception {
+    public static void destroy(int id, ResponseHelper res) throws Exception {
         try (Connection connection = Database.getConnection()) {
             String checkQuery = "SELECT id FROM villas WHERE id = ?";
             PreparedStatement checkStatement = connection.prepareStatement(checkQuery);

@@ -1,4 +1,4 @@
-package util;
+package util.Response;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
-public class Response {
+public class ResponseHelper {
 
     private HttpExchange httpExchange;
     private Headers headers;
     private StringBuilder stringBuilder;
     private boolean isSent;
 
-    public Response(HttpExchange httpExchange) {
+    public ResponseHelper(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
         this.stringBuilder = new StringBuilder();
         this.isSent = false;

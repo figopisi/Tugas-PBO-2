@@ -2,9 +2,8 @@ package service.CustomerService;
 
 import config.Database;
 import model.Booking;
-import model.Customer;
 import util.Request;
-import util.Response;
+import util.Response.ResponseHelper;
 import util.Exception.ApiException;
 import util.validator.CustomerValidator;
 import web.Server;
@@ -15,7 +14,7 @@ import java.util.*;
 
 public class CustomerBookingService {
 
-    public static void indexByCustomer(int customerId, Response res) throws Exception {
+    public static void indexByCustomer(int customerId, ResponseHelper res) throws Exception {
         try (Connection conn = Database.getConnection()) {
             String checkCustomer = "SELECT id FROM customers WHERE id = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkCustomer);
@@ -41,7 +40,7 @@ public class CustomerBookingService {
         }
     }
 
-    public static void create(int customerId, Request req, Response res) throws Exception {
+    public static void create(int customerId, Request req, ResponseHelper res) throws Exception {
         Map<String, Object> body = req.getJSON();
         CustomerValidator.validateInput(body);
 
