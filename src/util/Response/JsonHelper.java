@@ -27,9 +27,11 @@ public class JsonHelper {
         return response;
     }
 
-    public static Map<String, Object> error(String message) {
+    // 🔑 Method error baru: support `type` + `message`
+    public static Map<String, Object> error(String type, String message) {
         Map<String, Object> response = new HashMap<>();
-        response.put("status", 400);
+        response.put("status", 400); // Default 400, status final diatur di ResponseHelper.send()
+        response.put("error", type);
         response.put("message", message);
         return response;
     }
