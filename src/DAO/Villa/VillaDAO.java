@@ -144,4 +144,20 @@ public class VillaDAO {
             );
         }
     }
+
+    public boolean existsById(int id) {
+        String query = "SELECT id FROM villas WHERE id = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            throw new ApiException.InternalServerErrorApiException(
+                    "Terjadi kesalahan saat memeriksa villa dengan id: " + id + ". " + e.getMessage()
+            );
+        }
+    }
 }
