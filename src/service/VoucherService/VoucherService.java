@@ -1,143 +1,80 @@
 package service.VoucherService;
 
-import config.Database;
+import DAO.Voucher.VoucherDAO;
 import model.Voucher;
-import util.Request;
 import util.Exception.ApiException;
-import util.validator.VoucherValidator;
+import util.Request;
+import util.Response.JsonHelper;
 import util.Response.ResponseHelper;
-import web.Server;
 
 import java.net.HttpURLConnection;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-
 
 public class VoucherService {
 
-    public static void index(ResponseHelper res) throws Exception {
-        try (Connection connection = Database.getConnection()) {
-            String query = "SELECT * FROM vouchers";
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery();
+    private static final VoucherDAO voucherDAO = new VoucherDAO();
 
-            List<Voucher> vouchers = new ArrayList<>();
-            while (resultSet.next()) {
-                vouchers.add(new Voucher(
-                        resultSet.getInt("id"),
-                        resultSet.getString("code"),
-                        resultSet.getString("description"),
-                        resultSet.getDouble("discount"),
-                        resultSet.getString("start_date"),
-                        resultSet.getString("end_date")
-                ));
-            }
-
-            res.setBody(Server.jsonMap(Map.of("status", 200, "data", vouchers)));
-            res.send(HttpURLConnection.HTTP_OK);
-        }
+    public static void index(ResponseHelper res) {
+        var vouchers = voucherDAO.findAll();
+        res.setBody(JsonHelper.success(vouchers));
+        res.send(HttpURLConnection.HTTP_OK);
     }
 
-    public static void show(int id, ResponseHelper res) throws Exception {
-        try (Connection connection = Database.getConnection()) {
-            String query = "SELECT * FROM vouchers WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
+    public static void show(int id, ResponseHelper res) {
+        Voucher voucher = voucherDAO.findById(id);
+        res.setBody(JsonHelper.success(voucher));
+        res.send(HttpURLConnection.HTTP_OK);
+    }
 
-            ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) {
-                throw new ApiException.NotFoundApiException("Voucher dengan id " + id + " tidak ditemukan");
-            }
+    public static void create(Request req, ResponseHelper res) {
+        Map<String, Object> body = req.getJSON();
+        validateVoucherInput(body);
 
-            Voucher voucher = new Voucher(
-                    resultSet.getInt("id"),
-                    resultSet.getString("code"),
-                    resultSet.getString("description"),
-                    resultSet.getDouble("discount"),
-                    resultSet.getString("start_date"),
-                    resultSet.getString("end_date")
+        Voucher voucher = buildVoucher(0, body);
+
+        int newId = voucherDAO.create(voucher);
+
+        res.setBody(JsonHelper.created(newId, "Voucher berhasil dibuat."));
+        res.send(HttpURLConnection.HTTP_CREATED);
+    }
+
+    public static void update(int id, Request req, ResponseHelper res) {
+        Map<String, Object> body = req.getJSON();
+        validateVoucherInput(body);
+
+        Voucher voucher = buildVoucher(id, body);
+
+        voucherDAO.update(id, voucher);
+
+        res.setBody(JsonHelper.success("Voucher berhasil diperbarui."));
+        res.send(HttpURLConnection.HTTP_OK);
+    }
+
+    public static void destroy(int id, ResponseHelper res) {
+        voucherDAO.delete(id);
+
+        res.setBody(JsonHelper.success("Voucher berhasil dihapus."));
+        res.send(HttpURLConnection.HTTP_OK);
+    }
+
+    private static void validateVoucherInput(Map<String, Object> body) {
+        if (!body.containsKey("code") || !body.containsKey("description") ||
+                !body.containsKey("discount") || !body.containsKey("start_date") ||
+                !body.containsKey("end_date")) {
+            throw new ApiException.BadRequestApiException(
+                    "Data voucher tidak lengkap. Wajib: code, description, discount, start_date, end_date."
             );
-
-            res.setBody(Server.jsonMap(Map.of("status", 200, "data", voucher)));
-            res.send(HttpURLConnection.HTTP_OK);
         }
     }
 
-    public static void create(Request req, ResponseHelper res) throws Exception {
-        Map<String, Object> body = req.getJSON();
-        VoucherValidator.validateInput(body);
-
-        try (Connection connection = Database.getConnection()) {
-            String query = "INSERT INTO vouchers(code, description, discount, start_date, end_date) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, (String) body.get("code"));
-            statement.setString(2, (String) body.get("description"));
-            statement.setDouble(3, (Double) body.get("discount"));
-            statement.setString(4, (String) body.get("start_date"));
-            statement.setString(5, (String) body.get("end_date"));
-            statement.executeUpdate();
-
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            generatedKeys.next();
-
-            res.setBody(Server.jsonMap(Map.of(
-                    "status", 201,
-                    "id", generatedKeys.getInt(1),
-                    "message", "Voucher berhasil dibuat"
-            )));
-            res.send(HttpURLConnection.HTTP_CREATED);
-        }
-    }
-
-    public static void update(int id, Request req, ResponseHelper res) throws Exception {
-        Map<String, Object> body = req.getJSON();
-        VoucherValidator.validateInput(body);
-
-        try (Connection connection = Database.getConnection()) {
-            String checkQuery = "SELECT id FROM vouchers WHERE id = ?";
-            PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
-            checkStatement.setInt(1, id);
-            ResultSet rs = checkStatement.executeQuery();
-
-            if (!rs.next()) {
-                throw new ApiException.NotFoundApiException("Voucher dengan id " + id + " tidak ditemukan");
-            }
-
-            String updateQuery = "UPDATE vouchers SET code = ?, description = ?, discount = ?, start_date = ?, end_date = ? WHERE id = ?";
-            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-            updateStatement.setString(1, (String) body.get("code"));
-            updateStatement.setString(2, (String) body.get("description"));
-            updateStatement.setDouble(3, (Double) body.get("discount"));
-            updateStatement.setString(4, (String) body.get("start_date"));
-            updateStatement.setString(5, (String) body.get("end_date"));
-            updateStatement.setInt(6, id);
-            updateStatement.executeUpdate();
-
-            res.setBody(Server.jsonMap(Map.of("status", 200, "message", "Voucher berhasil diubah")));
-            res.send(HttpURLConnection.HTTP_OK);
-        }
-    }
-
-    public static void destroy(int id, ResponseHelper res) throws Exception {
-        try (Connection connection = Database.getConnection()) {
-            String checkQuery = "SELECT id FROM vouchers WHERE id = ?";
-            PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
-            checkStatement.setInt(1, id);
-            ResultSet rs = checkStatement.executeQuery();
-
-            if (!rs.next()) {
-                throw new ApiException.NotFoundApiException("Voucher dengan id " + id + " tidak ditemukan");
-            }
-
-            String deleteQuery = "DELETE FROM vouchers WHERE id = ?";
-            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
-            deleteStatement.setInt(1, id);
-            deleteStatement.executeUpdate();
-
-            res.setBody(Server.jsonMap(Map.of("status", 200, "message", "Voucher berhasil dihapus")));
-            res.send(HttpURLConnection.HTTP_OK);
-        }
+    private static Voucher buildVoucher(int id, Map<String, Object> body) {
+        return new Voucher(
+                id,
+                (String) body.get("code"),
+                (String) body.get("description"),
+                (Double) body.get("discount"),
+                (String) body.get("start_date"),
+                (String) body.get("end_date")
+        );
     }
 }
