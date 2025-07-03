@@ -1,4 +1,4 @@
-package Controller.VillaController;
+package controller.VillaController;
 
 import service.VillaService.AvailableService;
 import util.validator.VillaAvailableValidator;
