@@ -5,8 +5,8 @@ import model.Booking;
 import util.Request;
 import util.Response.ResponseHelper;
 import util.Exception.ApiException;
-import util.validator.CustomerValidator;
 import web.Server;
+import util.validator.BookingValidator;
 
 import java.net.HttpURLConnection;
 import java.util.List;
@@ -36,7 +36,7 @@ public class BookingService {
 
     public static void create(int customerId, Request req, ResponseHelper res) {
         Map<String, Object> body = req.getJSON();
-        CustomerValidator.validateInput(body);
+        BookingValidator.validateInput(body);
 
         if (!bookingDAO.existsCustomerById(customerId)) {
             throw new ApiException.NotFoundApiException("Customer dengan id " + customerId + " tidak ditemukan");
@@ -49,7 +49,7 @@ public class BookingService {
                 (String) body.get("checkin_date"),
                 (String) body.get("checkout_date"),
                 (Double) body.get("price"),
-                (Integer) body.get("voucher"), // bisa null
+                (Integer) body.get("voucher"),
                 (Double) body.get("final_price"),
                 (String) body.get("payment_status"),
                 (Boolean) body.getOrDefault("has_checkedin", false),
