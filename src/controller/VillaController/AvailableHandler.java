@@ -1,7 +1,7 @@
 package controller.VillaController;
 
 import service.VillaService.AvailableService;
-import util.validator.VillaAvailableValidator;
+import util.validator.AvailableValidator;
 import util.Exception.ApiException;
 import util.Response.ResponseHelper;
 import model.RoomType;
@@ -19,10 +19,9 @@ public class AvailableHandler {
         try {
             String ciDate = queryParams.get("ci_date");
             String coDate = queryParams.get("co_date");
+            AvailableValidator.validate(ciDate, coDate);
 
-            VillaAvailableValidator.validate(ciDate, coDate);
-
-            List<RoomType> rooms = AvailableService.getAvailableRooms(villaId, ciDate, coDate);
+            List<RoomType> rooms = AvailableService.findAvailable(villaId, ciDate, coDate);
 
             String jsonResponse = objectMapper.writeValueAsString(rooms);
 

@@ -14,6 +14,11 @@ public class AvailableService {
 
     private static final RoomDAO roomDAO = new RoomDAO();
 
+    public static List<RoomType> findAvailable(int villaId, String ciDate, String coDate) {
+        validateDateParams(ciDate, coDate);
+        return roomDAO.findAvailable(villaId, ciDate, coDate);
+    }
+
     public static void index(int villaId, String ciDate, String coDate, ResponseHelper res) throws Exception {
         validateDateParams(ciDate, coDate);
 
@@ -22,6 +27,7 @@ public class AvailableService {
         res.send(HttpURLConnection.HTTP_OK);
     }
 
+    // 👉 Validasi tanggal tetap dipakai bersama
     private static void validateDateParams(String ciDate, String coDate) throws ValidationException {
         if (ciDate == null || ciDate.trim().isEmpty()) {
             throw new ValidationException("Tanggal check-in tidak boleh kosong");
