@@ -1,11 +1,20 @@
 package config;
+
+import util.Exception.ApiException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Database {
-    public static Connection getConnection() throws Exception {
+    public static Connection getConnection() {
         String url = "jdbc:sqlite:db/villas.db";
-        return DriverManager.getConnection(url);
+        try {
+            return DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            throw new ApiException.InternalServerErrorApiException(
+                    "Gagal membuat koneksi ke database: " + e.getMessage()
+            );
+        }
     }
 }
-
