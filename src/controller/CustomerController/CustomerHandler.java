@@ -1,4 +1,4 @@
-package Controller.CustomerController;
+package controller.CustomerController;
 
 import com.sun.net.httpserver.HttpExchange;
 import util.Request;
