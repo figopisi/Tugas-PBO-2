@@ -1,9 +1,10 @@
 package util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import util.Exception.GeneralException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Request {
 
@@ -28,13 +27,15 @@ public class Request {
         this.jsonBody = jsonBody;
     }
 
+    public Request(HttpExchange httpExchange) {
+        this(httpExchange, null);
+    }
+
     public String getBody() {
         if (this.rawBody == null) {
             this.rawBody = new BufferedReader(
                     new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8)
-            )
-                    .lines()
-                    .collect(Collectors.joining("\n"));
+            ).lines().collect(Collectors.joining("\n"));
         }
 
         return this.rawBody;
@@ -48,21 +49,24 @@ public class Request {
         return headers.getFirst("Content-Type");
     }
 
-    public Map<String, Object> getJSON() throws JsonProcessingException {
-        if (!getContentType().equalsIgnoreCase("application/json")) {
+    public Map<String, Object> getJSON() {
+        if (!"application/json".equalsIgnoreCase(getContentType())) {
             return null;
         }
 
         Map<String, Object> jsonMap = new HashMap<>();
         if (jsonBody == null) {
             ObjectMapper objectMapper = new ObjectMapper();
-            jsonMap = objectMapper.readValue(this.getBody(), new TypeReference<>(){});
+            try {
+                jsonMap = objectMapper.readValue(this.getBody(), new TypeReference<>() {});
+            } catch (Exception e) {
+                throw new GeneralException.UtilityException(
+                        "Gagal memproses JSON request",
+                        e.getMessage()
+                );
+            }
         }
 
         return jsonMap;
-    }
-
-    public Request(HttpExchange httpExchange) {
-        this(httpExchange, null);
     }
 }

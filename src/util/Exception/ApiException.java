@@ -1,8 +1,8 @@
 package util.Exception;
 
-public class ApiException extends Exception {
+public class ApiException extends RuntimeException {
     private final int status;
-    private final String error; // error type, opsional
+    private final String error;
 
     public ApiException(int status, String message) {
         super(message);

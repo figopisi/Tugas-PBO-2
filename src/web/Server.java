@@ -3,6 +3,8 @@ package web;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import util.Exception.ApiException;
+import util.Response.JsonHelper;
 import util.Response.ResponseHelper;
 
 import java.net.InetSocketAddress;
@@ -13,7 +15,7 @@ public class Server {
 
     private final Route router;
 
-        public Server(int port, Route router) throws Exception {
+    public Server(int port, Route router) throws Exception {
         this.router = router;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new RequestHandler());
@@ -23,22 +25,34 @@ public class Server {
 
     private class RequestHandler implements HttpHandler {
         public void handle(HttpExchange exchange) {
+            ResponseHelper res = new ResponseHelper(exchange);
             try {
                 router.route(exchange);
-            } catch (Exception e) {
-                e.printStackTrace();
+
+            } catch (ApiException apiEx) {
+                apiEx.printStackTrace();
                 try {
-                    ResponseHelper res = new ResponseHelper(exchange);
-                    res.setBody(jsonMap(Map.of(
-                            "status", 500,
-                            "message", "Internal Server Error"
-                    )));
-                    res.send(500);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                } finally {
-                    exchange.close();
+                    Map<String, Object> errorBody = JsonHelper.error(
+                            apiEx.getError() != null ? apiEx.getError() : "ApiException",
+                            apiEx.getMessage()
+                    );
+                    res.setBody(jsonMap(errorBody));
+                    res.send(apiEx.getStatus());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                try {
+                    res.setBody(jsonMap(JsonHelper.error("InternalServerError", "Terjadi kesalahan pada server")));
+                    res.send(500);
+                } catch (Exception inner) {
+                    inner.printStackTrace();
+                }
+
+            } finally {
+                exchange.close();
             }
         }
     }
