@@ -54,19 +54,15 @@ public class Request {
             return null;
         }
 
-        Map<String, Object> jsonMap = new HashMap<>();
-        if (jsonBody == null) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                jsonMap = objectMapper.readValue(this.getBody(), new TypeReference<>() {});
-            } catch (Exception e) {
-                throw new GeneralException.UtilityException(
-                        "Gagal memproses JSON request",
-                        e.getMessage()
-                );
-            }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String body = (jsonBody != null) ? jsonBody : getBody();
+            return objectMapper.readValue(body, new TypeReference<>() {});
+        } catch (Exception e) {
+            throw new GeneralException.UtilityException(
+                    "Gagal memproses JSON request",
+                    e.getMessage()
+            );
         }
-
-        return jsonMap;
     }
 }

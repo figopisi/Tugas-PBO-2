@@ -26,8 +26,6 @@ public class RoomValidator {
                 throw new ValidationException("Harga harus berupa angka");
             }
 
-            // Tambahkan validasi lain jika perlu, seperti quantity, capacity, bed_size, dll
-
         } catch (ClassCastException e) {
             throw new ValidationException("Format input tidak valid. Pastikan semua field memiliki format yang benar.");
         }
