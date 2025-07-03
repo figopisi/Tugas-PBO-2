@@ -20,43 +20,50 @@ public class CustomerHandler {
         ResponseHelper res = new ResponseHelper(exchange);
 
         try {
-            if (method.equals("GET") && path.equals("/customers")) {
-                CustomerService.index(res);
-            } else if (method.equals("POST") && path.equals("/customers")) {
-                CustomerService.create(req, res);
-            } else if (method.equals("GET") && path.matches("/customers/\\d+")) {
-                int id = Integer.parseInt(path.split("/")[2]);
-                CustomerService.show(id, res);
-            } else if (method.equals("PUT") && path.matches("/customers/\\d+")) {
-                int id = Integer.parseInt(path.split("/")[2]);
-                CustomerService.update(id, req, res);
-            }
-
-            // REVIEW-related endpoints - ditempatkan lebih dulu dari bookings
-            else if (method.equals("POST") && path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
+            // --- [REVIEW]: /customers/{customerId}/bookings/{bookingId}/reviews
+            if (method.equals("POST") && path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
                 String[] parts = path.split("/");
                 int customerId = Integer.parseInt(parts[2]);
                 int bookingId = Integer.parseInt(parts[4]);
                 ReviewService.createByBooking(customerId, bookingId, req, res);
-            } else if (method.equals("GET") && path.matches("/customers/\\d+/reviews")) {
-                int id = Integer.parseInt(path.split("/")[2]);
-                ReviewService.indexByCustomer(id, res);
             }
 
-            // BOOKING-related endpoints
+            // --- [REVIEW]: /customers/{customerId}/reviews
+            else if (method.equals("GET") && path.matches("/customers/\\d+/reviews")) {
+                int customerId = Integer.parseInt(path.split("/")[2]);
+                ReviewService.indexByCustomer(customerId, res);
+            }
+
+            // --- [BOOKING]: /customers/{customerId}/bookings
             else if (method.equals("GET") && path.matches("/customers/\\d+/bookings")) {
-                int id = Integer.parseInt(path.split("/")[2]);
-                BookingService.indexByCustomer(id, res);
+                int customerId = Integer.parseInt(path.split("/")[2]);
+                BookingService.indexByCustomer(customerId, res);
             } else if (method.equals("POST") && path.matches("/customers/\\d+/bookings")) {
-                int id = Integer.parseInt(path.split("/")[2]);
-                BookingService.create(id, req, res);
+                int customerId = Integer.parseInt(path.split("/")[2]);
+                BookingService.create(customerId, req, res);
             }
 
-            // Method or route not allowed
+            // --- [CUSTOMER]: /customers
+            else if (method.equals("GET") && path.equals("/customers")) {
+                CustomerService.index(res);
+            } else if (method.equals("POST") && path.equals("/customers")) {
+                CustomerService.create(req, res);
+            }
+
+            // --- [CUSTOMER]: /customers/{id}
+            else if (method.equals("GET") && path.matches("/customers/\\d+")) {
+                int customerId = Integer.parseInt(path.split("/")[2]);
+                CustomerService.show(customerId, res);
+            } else if (method.equals("PUT") && path.matches("/customers/\\d+")) {
+                int customerId = Integer.parseInt(path.split("/")[2]);
+                CustomerService.update(customerId, req, res);
+            }
+
             else {
                 res.setBody(Server.jsonMap(Map.of("status", 405, "message", "Method Not Allowed")));
                 res.send(HttpURLConnection.HTTP_BAD_METHOD);
             }
+
         } catch (ApiException e) {
             res.setBody(Server.jsonMap(Map.of("status", e.getStatus(), "message", e.getMessage())));
             res.send(e.getStatus());
