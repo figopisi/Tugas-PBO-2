@@ -5,7 +5,7 @@ import model.RoomType;
 import util.Request;
 import util.Response.JsonHelper;
 import util.Response.ResponseHelper;
-import util.validator.VillaRoomValidator;
+import util.validator.RoomValidator;
 
 import java.net.HttpURLConnection;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class RoomService {
 
     public static void create(Request req, ResponseHelper res) {
         Map<String, Object> body = req.getJSON();
-        VillaRoomValidator.validateInput(body);
+        RoomValidator.validateInput(body);
 
         RoomType room = buildRoomType(body);
         int newId = roomDAO.create(room);
@@ -39,7 +39,7 @@ public class RoomService {
 
     public static void update(int id, Request req, ResponseHelper res) {
         Map<String, Object> body = req.getJSON();
-        VillaRoomValidator.validateInput(body);
+        RoomValidator.validateInput(body);
 
         RoomType room = buildRoomType(body);
         roomDAO.update(id, room);

@@ -2,7 +2,7 @@ package util.validator;
 
 import util.Exception.ValidationException;
 
-public class VillaAvailableValidator {
+public class AvailableValidator {
     public static void validate(String ciDate, String coDate) throws ValidationException {
         if (ciDate == null || ciDate.trim().isEmpty()) {
             throw new ValidationException("Tanggal check-in tidak boleh kosong");

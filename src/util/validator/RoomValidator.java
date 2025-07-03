@@ -4,7 +4,7 @@ import util.Exception.ValidationException;
 
 import java.util.Map;
 
-public class VillaRoomValidator {
+public class RoomValidator {
     public static void validateInput(Map<String, Object> body) throws ValidationException {
         if (body == null || body.isEmpty()) {
             throw new ValidationException("Data kamar tidak boleh kosong");
