@@ -1,4 +1,4 @@
-package DAO;
+package DAO.Villa;
 
 import config.Database;
 import model.Villa;
