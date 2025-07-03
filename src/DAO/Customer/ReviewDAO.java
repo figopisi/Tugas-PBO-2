@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerReviewDAO {
+public class ReviewDAO {
     public List<Review> findByCustomerId(int customerId) {
         try (Connection conn = Database.getConnection()) {
             if (!existsCustomer(conn, customerId)) {

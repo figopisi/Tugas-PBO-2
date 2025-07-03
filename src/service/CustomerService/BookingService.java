@@ -1,6 +1,6 @@
 package service.CustomerService;
 
-import DAO.Customer.CustomerBookingDAO;
+import DAO.Customer.BookingDAO;
 import model.Booking;
 import util.Request;
 import util.Response.ResponseHelper;
@@ -12,9 +12,9 @@ import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerBookingService {
+public class BookingService {
 
-    private static final CustomerBookingDAO bookingDAO = new CustomerBookingDAO();
+    private static final BookingDAO bookingDAO = new BookingDAO();
 
     public static void indexByCustomer(int customerId, ResponseHelper res) {
         if (!bookingDAO.existsCustomerById(customerId)) {

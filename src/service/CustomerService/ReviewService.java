@@ -1,6 +1,6 @@
 package service.CustomerService;
 
-import DAO.Customer.CustomerReviewDAO;
+import DAO.Customer.ReviewDAO;
 import model.Review;
 import util.Request;
 import util.Response.JsonHelper;
@@ -9,8 +9,8 @@ import util.Response.ResponseHelper;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
-public class CustomerReviewService {
-    private static final CustomerReviewDAO reviewDAO = new CustomerReviewDAO();
+public class ReviewService {
+    private static final ReviewDAO reviewDAO = new ReviewDAO();
 
     public static void indexByCustomer(int customerId, ResponseHelper res) {
         var reviews = reviewDAO.findByCustomerId(customerId);

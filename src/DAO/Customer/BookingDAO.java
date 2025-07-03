@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerBookingDAO {
+public class BookingDAO {
 
     public boolean existsCustomerById(int customerId) {
         try (Connection conn = Database.getConnection()) {

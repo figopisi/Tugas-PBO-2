@@ -5,8 +5,8 @@ import util.Request;
 import util.Response.ResponseHelper;
 import web.Server;
 import service.CustomerService.CustomerService;
-import service.CustomerService.CustomerBookingService;
-import service.CustomerService.CustomerReviewService;
+import service.CustomerService.BookingService;
+import service.CustomerService.ReviewService;
 import util.Exception.ApiException;
 
 import java.net.HttpURLConnection;
@@ -35,21 +35,21 @@ public class CustomerHandler {
             // Booking-related endpoints
             else if (method.equals("GET") && path.matches("/customers/\\d+/bookings")) {
                 int id = Integer.parseInt(path.split("/")[2]);
-                CustomerBookingService.indexByCustomer(id, res);
+                BookingService.indexByCustomer(id, res);
             } else if (method.equals("POST") && path.matches("/customers/\\d+/bookings")) {
                 int id = Integer.parseInt(path.split("/")[2]);
-                CustomerBookingService.create(id, req, res);
+                BookingService.create(id, req, res);
             }
 
             // Review-related endpoints
             else if (method.equals("GET") && path.matches("/customers/\\d+/reviews")) {
                 int id = Integer.parseInt(path.split("/")[2]);
-                CustomerReviewService.indexByCustomer(id, res);
+                ReviewService.indexByCustomer(id, res);
             } else if (method.equals("POST") && path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
                 String[] parts = path.split("/");
                 int customerId = Integer.parseInt(parts[2]);
                 int bookingId = Integer.parseInt(parts[4]);
-                CustomerReviewService.createByBooking(customerId, bookingId, req, res);
+                ReviewService.createByBooking(customerId, bookingId, req, res);
             }
 
             // Method or route not allowed
