@@ -1,16 +1,16 @@
-package Controller.VillaController;
+package controller.VoucherController;
 
 import com.sun.net.httpserver.HttpExchange;
 import util.Request;
 import util.Response.ResponseHelper;
-import util.Exception.ApiException;
-import service.VillaService.RoomService;
 import web.Server;
+import service.VoucherService.VoucherService;
+import util.Exception.ApiException;
 
 import java.net.HttpURLConnection;
 import java.util.Map;
 
-public class RoomHandler {
+public class VoucherHandler {
 
     public static void handle(HttpExchange exchange, String method, String path) throws Exception {
         path = path.replaceAll("/$", "");
@@ -18,24 +18,23 @@ public class RoomHandler {
         ResponseHelper res = new ResponseHelper(exchange);
 
         try {
-            if (method.equals("GET") && path.equals("/rooms")) {
-                RoomService.index(res);
-            } else if (method.equals("GET") && path.matches("/rooms/\\d+")) {
+            if (method.equals("GET") && path.equals("/vouchers")) {
+                VoucherService.index(res);
+            } else if (method.equals("POST") && path.equals("/vouchers")) {
+                VoucherService.create(req, res);
+            } else if (method.equals("GET") && path.matches("/vouchers/\\d+")) {
                 int id = Integer.parseInt(path.split("/")[2]);
-                RoomService.show(id, res);
-            } else if (method.equals("POST") && path.equals("/rooms")) {
-                RoomService.create(req, res);
-            } else if (method.equals("PUT") && path.matches("/rooms/\\d+")) {
+                VoucherService.show(id, res);
+            } else if (method.equals("PUT") && path.matches("/vouchers/\\d+")) {
                 int id = Integer.parseInt(path.split("/")[2]);
-                RoomService.update(id, req, res);
-            } else if (method.equals("DELETE") && path.matches("/rooms/\\d+")) {
+                VoucherService.update(id, req, res);
+            } else if (method.equals("DELETE") && path.matches("/vouchers/\\d+")) {
                 int id = Integer.parseInt(path.split("/")[2]);
-                RoomService.destroy(id, res);
+                VoucherService.destroy(id, res);
             } else {
                 res.setBody(Server.jsonMap(Map.of("status", 405, "message", "Method Not Allowed")));
                 res.send(HttpURLConnection.HTTP_BAD_METHOD);
             }
-
         } catch (ApiException e) {
             res.setBody(Server.jsonMap(Map.of("status", e.getStatus(), "message", e.getMessage())));
             res.send(e.getStatus());

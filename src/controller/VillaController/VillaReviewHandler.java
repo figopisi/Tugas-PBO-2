@@ -1,4 +1,4 @@
-package Controller.VillaController;
+package controller.VillaController;
 
 import com.sun.net.httpserver.HttpExchange;
 import util.Response.ResponseHelper;
