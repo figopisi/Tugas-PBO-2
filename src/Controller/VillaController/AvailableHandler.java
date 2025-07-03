@@ -1,6 +1,6 @@
 package Controller.VillaController;
 
-import service.VillaService.VillaAvailableService;
+import service.VillaService.AvailableService;
 import util.validator.VillaAvailableValidator;
 import util.Exception.ApiException;
 import util.Response.ResponseHelper;
@@ -22,7 +22,7 @@ public class AvailableHandler {
 
             VillaAvailableValidator.validate(ciDate, coDate);
 
-            List<RoomType> rooms = VillaAvailableService.getAvailableRooms(villaId, ciDate, coDate);
+            List<RoomType> rooms = AvailableService.getAvailableRooms(villaId, ciDate, coDate);
 
             String jsonResponse = objectMapper.writeValueAsString(rooms);
 

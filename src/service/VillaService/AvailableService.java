@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VillaAvailableService {
+public class AvailableService {
 
     public static List<RoomType> getAvailableRooms(int villaId, String ciDate, String coDate) throws Exception {
         validateDateParams(ciDate, coDate);
