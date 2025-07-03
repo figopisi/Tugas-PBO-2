@@ -32,24 +32,24 @@ public class CustomerHandler {
                 CustomerService.update(id, req, res);
             }
 
-            // Booking-related endpoints
+            // REVIEW-related endpoints - ditempatkan lebih dulu dari bookings
+            else if (method.equals("POST") && path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
+                String[] parts = path.split("/");
+                int customerId = Integer.parseInt(parts[2]);
+                int bookingId = Integer.parseInt(parts[4]);
+                ReviewService.createByBooking(customerId, bookingId, req, res);
+            } else if (method.equals("GET") && path.matches("/customers/\\d+/reviews")) {
+                int id = Integer.parseInt(path.split("/")[2]);
+                ReviewService.indexByCustomer(id, res);
+            }
+
+            // BOOKING-related endpoints
             else if (method.equals("GET") && path.matches("/customers/\\d+/bookings")) {
                 int id = Integer.parseInt(path.split("/")[2]);
                 BookingService.indexByCustomer(id, res);
             } else if (method.equals("POST") && path.matches("/customers/\\d+/bookings")) {
                 int id = Integer.parseInt(path.split("/")[2]);
                 BookingService.create(id, req, res);
-            }
-
-            // Review-related endpoints
-            else if (method.equals("GET") && path.matches("/customers/\\d+/reviews")) {
-                int id = Integer.parseInt(path.split("/")[2]);
-                ReviewService.indexByCustomer(id, res);
-            } else if (method.equals("POST") && path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
-                String[] parts = path.split("/");
-                int customerId = Integer.parseInt(parts[2]);
-                int bookingId = Integer.parseInt(parts[4]);
-                ReviewService.createByBooking(customerId, bookingId, req, res);
             }
 
             // Method or route not allowed
