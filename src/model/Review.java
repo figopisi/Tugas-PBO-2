@@ -15,7 +15,6 @@ public class Review {
         this.content = content;
     }
 
-
     public int getBookingId() {
         return bookingId;
     }
@@ -47,4 +46,6 @@ public class Review {
     public void setContent(String content) {
         this.content = content;
     }
+
+
 }
