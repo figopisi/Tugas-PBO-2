@@ -1,6 +1,6 @@
 package service.VillaService;
 
-import DAO.RoomDAO;
+import DAO.Villa.RoomDAO;
 import model.RoomType;
 import util.Request;
 import util.Response.JsonHelper;

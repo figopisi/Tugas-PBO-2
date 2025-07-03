@@ -1,12 +1,12 @@
 package web;
 
 import com.sun.net.httpserver.HttpExchange;
-import Controller.VillaController.VillaHandler;
-import Controller.VillaController.RoomHandler;
-import Controller.VillaController.VillaBookingHandler;
-import Controller.VillaController.VillaReviewHandler;
-import Controller.CustomerController.CustomerHandler;
-import Controller.VoucherController.VoucherHandler;
+import controller.VillaController.VillaHandler;
+import controller.VillaController.RoomHandler;
+import controller.VillaController.BookingHandler;
+import controller.VillaController.ReviewHandler;
+import controller.CustomerController.CustomerHandler;
+import controller.VoucherController.VoucherHandler;
 
 public class Route {
 
@@ -15,9 +15,9 @@ public class Route {
         String method = exchange.getRequestMethod();
 
         if (path.startsWith("/villas") && path.contains("/bookings")) {
-            VillaBookingHandler.handle(exchange, method, path);
+            BookingHandler.handle(exchange, method, path);
         } else if (path.startsWith("/villas") && path.contains("/reviews")) {
-            VillaReviewHandler.handle(exchange, method, path);
+            ReviewHandler.handle(exchange, method, path);
         } else if (path.startsWith("/rooms")) {
             RoomHandler.handle(exchange, method, path);
         } else if (path.startsWith("/villas")) {

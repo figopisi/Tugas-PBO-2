@@ -1,6 +1,6 @@
 package service.VillaService;
 
-import DAO.VillaDAO;
+import DAO.Villa.VillaDAO;
 import model.Villa;
 import util.Exception.ApiException;
 import util.Request;
