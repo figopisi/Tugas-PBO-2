@@ -10,6 +10,9 @@ public class Villa {
     private String description;
     private String address;
 
+    public Villa() {
+    }
+
     public Villa(int id, String name, String description, String address) {
         this.id = id;
         this.name = name;
@@ -46,7 +49,6 @@ public class Villa {
     public void setDescription(String description) { this.description = description; }
 
     public void setAddress(String address) { this.address = address; }
-
 
     public static List<Villa> fromResultSet(ResultSet resultSet) throws Exception {
         List<Villa> villas = new ArrayList<>();
