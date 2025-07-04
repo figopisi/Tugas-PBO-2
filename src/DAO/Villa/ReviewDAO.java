@@ -14,7 +14,7 @@ public class ReviewDAO {
 
     public List<Review> findByVillaId(int villaId) {
         try (Connection conn = Database.getConnection()) {
-            String query = "SELECT * FROM reviews WHERE villa_id = ?";
+            String query = "SELECT * FROM reviews WHERE villa = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
