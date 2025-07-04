@@ -14,7 +14,10 @@ public class ReviewDAO {
 
     public List<Review> findByVillaId(int villaId) {
         try (Connection conn = Database.getConnection()) {
-            String query = "SELECT * FROM reviews WHERE villa = ?";
+            String query = "SELECT r.* FROM reviews r " +
+                    "JOIN bookings b ON r.booking = b.id " +
+                    "JOIN room_types rt ON b.room_type = rt.id " +
+                    "WHERE rt.villa = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
@@ -22,7 +25,7 @@ public class ReviewDAO {
             List<Review> reviews = new ArrayList<>();
             while (rs.next()) {
                 reviews.add(new Review(
-                        rs.getInt("booking_id"),
+                        rs.getInt("booking"),
                         rs.getInt("star"),
                         rs.getString("title"),
                         rs.getString("content")
