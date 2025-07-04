@@ -16,6 +16,7 @@ public class CustomerService {
     private static final CustomerDAO customerDAO = new CustomerDAO();
 
     public static void index(ResponseHelper res) {
+        System.out.println(">> Masuk ke CustomerService.index()");
         List<Customer> customers = customerDAO.findAll();
         res.setBody(JsonHelper.success(customers));
         res.send(HttpURLConnection.HTTP_OK);
