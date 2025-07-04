@@ -15,7 +15,7 @@ public class BookingDAO {
     public static List<Booking> findByVillaId(int villaId) {
         try (Connection conn = Database.getConnection()) {
             String query =  "SELECT * FROM bookings WHERE room_type IN " +
-                            "(SELECT id FROM room_types WHERE villa_id = ?)";
+                    "(SELECT id FROM room_types WHERE villa = ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
